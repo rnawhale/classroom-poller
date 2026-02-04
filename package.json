@@ -1,0 +1,19 @@
+{
+  "name": "classroom-poller",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Google Classroom poller (courses + coursework) for checklist generation",
+  "main": "index.js",
+  "scripts": {
+    "poll": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.6.1",
+    "googleapis": "^140.0.1",
+    "open": "^10.2.0"
+  }
+}
