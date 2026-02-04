@@ -6,9 +6,12 @@ import open from 'open';
 import { google } from 'googleapis';
 import { format } from 'date-fns';
 
+// Use "me" scopes so it works for student accounts too.
+// If you later need teacher-wide access, switch to *.students.* scopes (requires teacher/admin permissions).
 const SCOPES = [
   'https://www.googleapis.com/auth/classroom.courses.readonly',
-  'https://www.googleapis.com/auth/classroom.coursework.students.readonly',
+  'https://www.googleapis.com/auth/classroom.coursework.me.readonly',
+  'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly',
 ];
 
 function mustGetEnv(name) {
