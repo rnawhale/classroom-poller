@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-02-05T15:01:15.679Z",
+  "day": "2026-01-06",
+  "groups": [
+    {
+      "name": "3-1 Mr. Smith 25/26",
+      "items": [
+        {
+          "id": "ann:794983481366:824157491049",
+          "title": "Some pics from today! I'll add more to your 3-1 albums soon!",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2026-01-06T14:19:18.211Z"
+        },
+        {
+          "id": "ann:794983481366:838042545238",
+          "title": "Regular School Starts Tomorrow! We had a great time on the school trip and at leadership camp today. Thank you to eve…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2026-01-06T09:52:00.811Z"
+        }
+      ]
+    }
+  ]
+}

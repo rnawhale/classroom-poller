@@ -12,6 +12,14 @@ npm run poll
 
 First run opens a browser for Google OAuth consent, then saves tokens to `GOOGLE_TOKEN_PATH`.
 
+## Build checklist site data
+```bash
+npm run build:data
+```
+This writes:
+- `docs/days/YYYY-MM-DD.json`
+- `docs/days/index.json`
+
 ## Notes
 - Scopes are read-only.
 - Due date/time from Classroom is interpreted as Asia/Seoul (KST) by default.

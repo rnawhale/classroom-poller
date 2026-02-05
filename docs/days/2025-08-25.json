@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-02-05T15:01:15.668Z",
+  "day": "2025-08-25",
+  "groups": [
+    {
+      "name": "3-1 Mr. Smith 25/26",
+      "items": [
+        {
+          "id": "ann:794983481366:799778466053",
+          "title": "Reading 📚 Reading Project – Our Story Books! 🎨 This week, our class will be making small storybooks to help us full…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-08-25T07:15:44.912Z"
+        },
+        {
+          "id": "ann:794983481366:799766905563",
+          "title": "Today's Art Class Great work!",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-08-25T04:18:22.469Z"
+        }
+      ]
+    }
+  ]
+}

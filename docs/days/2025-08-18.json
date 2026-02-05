@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-02-05T15:01:15.667Z",
+  "day": "2025-08-18",
+  "groups": [
+    {
+      "name": "3-1 Mr. Smith 25/26",
+      "items": [
+        {
+          "id": "ann:794983481366:795554236763",
+          "title": "✨ Student Council ✨ Do you want to be a leader in our school? 🌟 Here’s your chance! If you’d like to join Student Co…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-08-18T10:03:50.135Z"
+        },
+        {
+          "id": "ann:794983481366:798841779293",
+          "title": "Reading Please watch the video of the story we will read it tomorrow in class. https://www.youtube.com/watch?v=hLASwj…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-08-18T07:14:27.244Z"
+        }
+      ]
+    }
+  ]
+}

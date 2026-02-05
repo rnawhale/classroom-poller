@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-02-05T15:01:15.670Z",
+  "day": "2025-09-17",
+  "groups": [
+    {
+      "name": "3-1 Mr. Smith 25/26",
+      "items": [
+        {
+          "id": "ann:794983481366:807108355457",
+          "title": "🎤 🎭 MCA Talent Show! Do you have a special talent you want to show off? Now’s your chance! Sign up using the QR cod…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-09-17T07:06:06.184Z"
+        },
+        {
+          "id": "ann:794983481366:807103441707",
+          "title": "Upcoming Tests Friday, September 19 - Science Topic 1 test Tuesday, September 23rd - Language Arts - Grammar Workshop…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-09-17T06:33:11.808Z"
+        },
+        {
+          "id": "ann:794983481366:807079256401",
+          "title": "Dear Parents, We are excited to share that MCA will be participating in the , a wonderful nonprofit organization that…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-09-17T03:44:32.980Z"
+        }
+      ]
+    }
+  ]
+}

@@ -31,6 +31,7 @@
   <header>
     <h1>숙제 체크리스트</h1>
     <div class="sub" id="lastUpdated">로딩중…</div>
+    <div class="sub" id="dayNav" style="margin-top:6px;"></div>
   </header>
   <main>
     <div id="app"></div>
@@ -48,19 +49,55 @@ function saveDone(done){
 function fmtKst(iso){
   if (!iso) return null;
   const d = new Date(iso);
-  // show in Asia/Seoul
   return new Intl.DateTimeFormat('ko-KR', { timeZone:'Asia/Seoul', month:'numeric', day:'numeric', weekday:'short', hour:'2-digit', minute:'2-digit' }).format(d);
+}
+function kstDayKey(d){
+  // YYYY-MM-DD in Asia/Seoul
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone:'Asia/Seoul', year:'numeric', month:'2-digit', day:'2-digit' }).formatToParts(d);
+  const y = parts.find(p=>p.type==='year').value;
+  const m = parts.find(p=>p.type==='month').value;
+  const da = parts.find(p=>p.type==='day').value;
+  return `${y}-${m}-${da}`;
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
 }
 
 async function main(){
   const app = document.getElementById('app');
   const lastUpdated = document.getElementById('lastUpdated');
+  const dayNav = document.getElementById('dayNav');
   const done = loadDone();
+
+  let manifest;
+  try {
+    const res = await fetch('./days/index.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch days/index.json: ' + res.status);
+    manifest = await res.json();
+  } catch (e) {
+    app.innerHTML = `<div class="error">${String(e.stack || e)}</div>`;
+    return;
+  }
+
+  const url = new URL(location.href);
+  const dayParam = url.searchParams.get('day');
+  const todayKey = kstDayKey(new Date());
+  const available = new Set((manifest.days || []).map(d => d.day));
+  const activeDay = (dayParam && available.has(dayParam)) ? dayParam : (available.has(todayKey) ? todayKey : manifest.latestDay);
+
+  // Render day links
+  const days = (manifest.days || []).slice().sort((a,b)=> b.day.localeCompare(a.day));
+  dayNav.innerHTML = days.map(d => {
+    const label = d.label || d.day;
+    const href = `?day=${encodeURIComponent(d.day)}`;
+    const isActive = d.day === activeDay;
+    return `<a href="${href}" style="margin-right:10px; ${isActive?'color:#7ee787; text-decoration:underline;':''}">${escapeHtml(label)}</a>`;
+  }).join('');
 
   let data;
   try {
-    const res = await fetch('./data.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error('Failed to fetch data.json: ' + res.status);
+    const res = await fetch(`./days/${activeDay}.json`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch day data: ' + res.status);
     data = await res.json();
   } catch (e) {
     app.innerHTML = `<div class="error">${String(e.stack || e)}</div>`;
@@ -69,20 +106,23 @@ async function main(){
 
   if (data.generatedAt) {
     const t = new Date(data.generatedAt);
-    lastUpdated.textContent = `마지막 갱신: ` + new Intl.DateTimeFormat('ko-KR', { timeZone:'Asia/Seoul', dateStyle:'medium', timeStyle:'short' }).format(t);
+    lastUpdated.textContent = `선택 날짜: ${activeDay} · 마지막 갱신: ` + new Intl.DateTimeFormat('ko-KR', { timeZone:'Asia/Seoul', dateStyle:'medium', timeStyle:'short' }).format(t);
   } else {
-    lastUpdated.textContent = '마지막 갱신: (알 수 없음)';
+    lastUpdated.textContent = `선택 날짜: ${activeDay}`;
   }
 
   const groups = data.groups || [];
-  if (!groups.length) {
-    app.innerHTML = `<div class="sub">표시할 숙제가 없어요.</div>`;
+  if (!groups.length || !groups.some(g => (g.items||[]).length)) {
+    app.innerHTML = `<div class="sub">이 날에는 표시할 숙제가 없어요.</div>`;
     return;
   }
 
   app.innerHTML = '';
 
   for (const g of groups) {
+    const items = g.items || [];
+    if (!items.length) continue;
+
     const box = document.createElement('section');
     box.className = 'group';
 
@@ -90,7 +130,7 @@ async function main(){
     h.textContent = g.name;
     box.appendChild(h);
 
-    for (const it of (g.items || [])) {
+    for (const it of items) {
       const row = document.createElement('div');
       row.className = 'item';
 

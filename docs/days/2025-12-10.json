@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-02-05T15:01:15.677Z",
+  "day": "2025-12-10",
+  "groups": [
+    {
+      "name": "3-1 Mr. Smith 25/26",
+      "items": [
+        {
+          "id": "ann:794983481366:835682435612",
+          "title": "Orchestra and Winter Festival! Parents, There is no Orchestra lesson tomorrow, so students do not need to bring their…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-12-10T07:10:47.279Z"
+        },
+        {
+          "id": "ann:794983481366:821437492814",
+          "title": "Upcoming Tests Math - Topic 7 - December 11th (Check the practice test) Mr Smith’s Classroom Books Students are welco…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-12-10T06:58:17.356Z"
+        }
+      ]
+    }
+  ]
+}

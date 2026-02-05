@@ -8,6 +8,9 @@
     "poll": "node index.js",
     "build:data": "node build-data.js"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

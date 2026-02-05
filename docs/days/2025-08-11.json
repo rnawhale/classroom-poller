@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-02-05T15:01:15.665Z",
+  "day": "2025-08-11",
+  "groups": [
+    {
+      "name": "3-1 Mr. Smith 25/26",
+      "items": [
+        {
+          "id": "ann:794983481366:791664200666",
+          "title": "Some fun pics from today! Enjoy Mr. Smith",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-08-11T11:35:57.109Z"
+        },
+        {
+          "id": "ann:794983481366:795196770584",
+          "title": "What a great first day! 🎉 We started with a delicious breakfast, caught up with friends, met some new classmates, an…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-08-11T11:23:22.363Z"
+        }
+      ]
+    }
+  ]
+}

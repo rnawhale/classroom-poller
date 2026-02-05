@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-02-05T15:01:15.672Z",
+  "day": "2025-10-20",
+  "groups": [
+    {
+      "name": "3-1 Mr. Smith 25/26",
+      "items": [
+        {
+          "id": "ann:794983481366:815908095756",
+          "title": "We’re very lucky that Ms. Hanmi made a video for us to follow for our Christmas performance! Please take a look at it…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-10-20T12:49:41.995Z"
+        },
+        {
+          "id": "ann:794983481366:818136177038",
+          "title": "UpcomingTests Thursday, October 23rd -Math Topic 4 Friday, October 24th - Science Topic 2 Reading Complete this week'…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-10-20T05:51:47.717Z"
+        },
+        {
+          "id": "ann:794983481366:804657259197",
+          "title": "It's quite cold today everyone! Wrap up warm! See you soon! Mr. SMITH",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-10-19T22:11:52.500Z"
+        }
+      ]
+    }
+  ]
+}

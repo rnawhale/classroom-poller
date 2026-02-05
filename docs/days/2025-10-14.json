@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-02-05T15:01:15.672Z",
+  "day": "2025-10-14",
+  "groups": [
+    {
+      "name": "3-1 Mr. Smith 25/26",
+      "items": [
+        {
+          "id": "ann:794983481366:804324472965",
+          "title": "October Newsletter Mr. Smith",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-10-14T06:17:14.905Z"
+        },
+        {
+          "id": "ann:794983481366:804324141635",
+          "title": "Reading The story this week is 'Why sun & moon live in the sky. It is an origin Myth. Please watch the video until yo…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-10-14T05:50:16.518Z"
+        },
+        {
+          "id": "ann:794983481366:817899202856",
+          "title": "Reading The story this week is 'Why sun & moon live in the sky. It is a Myth. Please watch the video until you unders…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-10-14T05:37:25.604Z"
+        }
+      ]
+    }
+  ]
+}

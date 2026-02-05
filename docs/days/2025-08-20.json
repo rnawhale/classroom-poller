@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-02-05T15:01:15.667Z",
+  "day": "2025-08-20",
+  "groups": [
+    {
+      "name": "3-1 Mr. Smith 25/26",
+      "items": [
+        {
+          "id": "ann:794983481366:799136866634",
+          "title": "Orchestra tomorrow! Please remember to bring your instruments. Mr. Smith",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-08-20T14:00:08.654Z"
+        },
+        {
+          "id": "ann:794983481366:799112465052",
+          "title": "Asking questions like a scientist mystery bag! Great job everyone!",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-08-20T09:27:55.923Z"
+        },
+        {
+          "id": "ann:794983481366:799104925872",
+          "title": "Reading Complete pages 45,47,48 n the MY View Reading Book {tomorrow) Please watch the video if you need help. https:…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-08-20T08:25:32.157Z"
+        }
+      ]
+    }
+  ]
+}

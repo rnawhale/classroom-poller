@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-02-05T15:01:15.671Z",
+  "day": "2025-09-23",
+  "groups": [
+    {
+      "name": "3-1 Mr. Smith 25/26",
+      "items": [
+        {
+          "id": "ann:794983481366:808430450995",
+          "title": "🎃 📚 It’s almost time to celebrate Halloween at MCA—with a book twist! This year, Elementary students can create the…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-09-23T05:22:12.497Z"
+        },
+        {
+          "id": "ann:794983481366:808416437199",
+          "title": "MAP TESTING Great job finishing your first MAP test in Science! The next test will be Reading TOMORROW The best way t…",
+          "link": "https://classroom.google.com/c/Nzk0OTgzNDgxMzY2",
+          "dueAt": null,
+          "topic": "ANNOUNCEMENT",
+          "createdAt": "2025-09-23T04:01:32.149Z"
+        }
+      ]
+    }
+  ]
+}
