@@ -17,5 +17,60 @@
         }
       ]
     }
-  ]
+  ],
+  "summary": {
+    "tasks": [
+      {
+        "subject": "Reading",
+        "title": "Complete the definition paper with 3 example sentences",
+        "dueAt": null
+      },
+      {
+        "subject": "Reading",
+        "title": "Read and complete the AR quizzes for your library book",
+        "dueAt": null
+      },
+      {
+        "subject": "Reading",
+        "title": "Watch the video of this week’s story (YouTube)",
+        "dueAt": null
+      },
+      {
+        "subject": "Spelling",
+        "title": "Prepare for spelling test (list provided in announcement)",
+        "dueAt": "2026-02-13T14:59:00.000Z"
+      },
+      {
+        "subject": "ReadWorks",
+        "title": "Log in and complete assigned reading passages",
+        "dueAt": null
+      },
+      {
+        "subject": "Math",
+        "title": "Khan Academy: data lessons (practice a little each night)",
+        "dueAt": null
+      },
+      {
+        "subject": "Science",
+        "title": "Read and complete pages 174–177",
+        "dueAt": "2026-02-06T14:59:00.000Z"
+      },
+      {
+        "subject": "Social Studies",
+        "title": "Complete pages 186–191",
+        "dueAt": "2026-02-09T14:59:00.000Z"
+      },
+      {
+        "subject": "Chinese",
+        "title": "Complete the worksheet given in class + practice on the Chinese website",
+        "dueAt": null
+      },
+      {
+        "subject": "Korean",
+        "title": "Pages 38–41 (items 10–21?)",
+        "dueAt": null
+      }
+    ],
+    "notes": "Auto-parsed (gpt-5.2) from combined announcement. Due dates are inferred in Asia/Seoul."
+  }
 }

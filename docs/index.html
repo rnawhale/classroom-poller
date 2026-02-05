@@ -35,6 +35,7 @@
   </header>
   <main style="display:flex; gap:12px; align-items:flex-start; justify-content:space-between;">
     <div style="flex:1; min-width:0;">
+      <div id="summary"></div>
       <div id="app"></div>
       <div class="sub" style="margin-top:12px;">체크 상태는 이 기기(브라우저)에만 저장돼요.</div>
     </div>
@@ -71,6 +72,7 @@ function escapeHtml(s){
 
 async function main(){
   const app = document.getElementById('app');
+  const summaryEl = document.getElementById('summary');
   const lastUpdated = document.getElementById('lastUpdated');
   const dayNav = document.getElementById('dayNav');
   const done = loadDone();
@@ -136,6 +138,47 @@ async function main(){
     lastUpdated.textContent = `선택 날짜: ${activeDay} · 마지막 갱신: ` + new Intl.DateTimeFormat('ko-KR', { timeZone:'Asia/Seoul', dateStyle:'medium', timeStyle:'short' }).format(t);
   } else {
     lastUpdated.textContent = `선택 날짜: ${activeDay}`;
+  }
+
+  // Summary table (if available)
+  const summary = data.summary;
+  if (summary?.tasks?.length) {
+    const rows = summary.tasks.slice().sort((a,b)=>{
+      const ad = a.dueAt ? Date.parse(a.dueAt) : Infinity;
+      const bd = b.dueAt ? Date.parse(b.dueAt) : Infinity;
+      if (ad!==bd) return ad-bd;
+      return (a.subject||'').localeCompare(b.subject||'') || (a.title||'').localeCompare(b.title||'');
+    });
+
+    const fmt = (iso)=> iso ? new Intl.DateTimeFormat('ko-KR', { timeZone:'Asia/Seoul', month:'2-digit', day:'2-digit', weekday:'short' }).format(new Date(iso)) : '';
+
+    summaryEl.innerHTML = `
+      <section class="group" style="margin-top:0;">
+        <h2>요약</h2>
+        <div style="overflow:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead>
+              <tr style="text-align:left; color: var(--muted);">
+                <th style="padding:8px 12px; border-bottom:1px solid var(--line);">과목</th>
+                <th style="padding:8px 12px; border-bottom:1px solid var(--line);">할 일</th>
+                <th style="padding:8px 12px; border-bottom:1px solid var(--line); white-space:nowrap;">마감</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map(r=>`
+                <tr>
+                  <td style="padding:8px 12px; border-bottom:1px solid rgba(34,48,67,.35); white-space:nowrap;">${escapeHtml(r.subject||'')}</td>
+                  <td style="padding:8px 12px; border-bottom:1px solid rgba(34,48,67,.35);">${escapeHtml(r.title||'')}</td>
+                  <td style="padding:8px 12px; border-bottom:1px solid rgba(34,48,67,.35); white-space:nowrap;">${escapeHtml(fmt(r.dueAt) || '')}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    `;
+  } else {
+    summaryEl.innerHTML = '';
   }
 
   const groups = data.groups || [];
