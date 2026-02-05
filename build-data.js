@@ -146,7 +146,12 @@ async function main() {
 
       for (const [dayKey, parts] of byDay.entries()) {
         parts.sort((a, b) => a.when.localeCompare(b.when));
-        const combined = parts.map(p => p.txt).join('\n\n');
+        const combinedRaw = parts.map(p => p.txt).join('\n\n');
+
+        // Redact passwords (keep structure but hide sensitive values)
+        const combined = combinedRaw
+          .replace(/(password\s*:\s*)([^\s]+)/gi, '$1[REDACTED]')
+          .replace(/(pw\s*:\s*)([^\s]+)/gi, '$1[REDACTED]');
         const createdAt = parts[parts.length - 1].when;
 
         pushItem(dayKey, c.name, {

@@ -29,9 +29,14 @@
 </head>
 <body>
   <header>
-    <h1>숙제 체크리스트</h1>
-    <div class="sub" id="lastUpdated">로딩중…</div>
-    <div class="sub" id="dayNav" style="margin-top:6px; display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;"></div>
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+      <div>
+        <h1>숙제 체크리스트</h1>
+        <div class="sub" id="classroomTop"></div>
+        <div class="sub" id="lastUpdated">로딩중…</div>
+      </div>
+      <div class="sub" id="dayNav" style="max-width: 210px; text-align:right; display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;"></div>
+    </div>
   </header>
   <main>
     <div id="app"></div>
@@ -87,7 +92,7 @@ async function main(){
   // Default: show today (only today's created/updated items)
   const activeDay = (dayParam && available.has(dayParam)) ? dayParam : (available.has(todayKey) ? todayKey : manifest.latestDay);
 
-  // Render day links (D-1 .. D-14 only)
+  // Render day links (last 14 days only) using date labels (YYYY.MM.DD)
   function addDaysKst(baseKey, delta) {
     const [y,m,d] = baseKey.split('-').map(Number);
     const utc = Date.UTC(y, m-1, d, 0, 0, 0);
@@ -95,25 +100,19 @@ async function main(){
     return kstDayKey(new Date(kstMs));
   }
 
+  const labelMap = new Map((manifest.days || []).map(d => [d.day, d.label || d.day]));
+
   const links = [];
-  for (let i=1; i<=14; i++) {
+  for (let i=0; i<14; i++) {
     const k = addDaysKst(todayKey, -i);
-    const isActive = k === activeDay;
     if (!available.has(k)) continue;
-    links.push({ day: k, label: `D-${i}`, isActive });
+    links.push({ day: k, label: labelMap.get(k) || k, isActive: k === activeDay });
   }
 
-  // also allow today via no-param; but show it as 'Today'
-  const todayActive = activeDay === todayKey;
-  const todayHref = `?day=${encodeURIComponent(todayKey)}`;
-
-  dayNav.innerHTML = `
-    <a href="${todayHref}" style="${todayActive?'color:#7ee787; text-decoration:underline;':''}">Today</a>
-    ${links.map(d => {
-      const href = `?day=${encodeURIComponent(d.day)}`;
-      return `<a href="${href}" style="${d.isActive?'color:#7ee787; text-decoration:underline;':''}">${escapeHtml(d.label)}</a>`;
-    }).join('')}
-  `;
+  dayNav.innerHTML = links.map(d => {
+    const href = `?day=${encodeURIComponent(d.day)}`;
+    return `<a href="${href}" style="${d.isActive?'color:#7ee787; text-decoration:underline;':''}">${escapeHtml(d.label)}</a>`;
+  }).join('');
 
   let data;
   try {
@@ -124,6 +123,11 @@ async function main(){
     app.innerHTML = `<div class="error">${String(e.stack || e)}</div>`;
     return;
   }
+
+  // Top classroom link
+  const classroomTop = document.getElementById('classroomTop');
+  const firstLink = (data.groups || []).find(g => g.link)?.link;
+  classroomTop.innerHTML = firstLink ? `<a href="${firstLink}" target="_blank" rel="noopener noreferrer">Google Classroom 열기</a>` : '';
 
   if (data.generatedAt) {
     const t = new Date(data.generatedAt);
@@ -178,14 +182,25 @@ async function main(){
       a.textContent = it.title || '(제목 없음)';
       title.appendChild(a);
 
-      // Show full combined text (when available) under the link.
+      // Show full combined text (when available) without breaking the compact layout.
       if (it.details) {
-        const details = document.createElement('div');
-        details.className = 'meta';
-        details.style.whiteSpace = 'pre-wrap';
-        details.style.marginTop = '6px';
-        details.textContent = it.details;
-        content.appendChild(details);
+        const dwrap = document.createElement('details');
+        dwrap.style.marginTop = '6px';
+
+        const sum = document.createElement('summary');
+        sum.className = 'meta';
+        sum.style.cursor = 'pointer';
+        sum.textContent = '내용 보기';
+
+        const body = document.createElement('div');
+        body.className = 'meta';
+        body.style.whiteSpace = 'pre-wrap';
+        body.style.marginTop = '6px';
+        body.textContent = it.details;
+
+        dwrap.appendChild(sum);
+        dwrap.appendChild(body);
+        content.appendChild(dwrap);
       }
 
       const meta = document.createElement('div');
