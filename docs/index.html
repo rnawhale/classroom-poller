@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Homework Checklist</title>
+  <style>
+    :root { --bg:#0b0f14; --fg:#e6edf3; --muted:#9da7b3; --card:#111823; --line:#223043; --accent:#7ee787; }
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans KR, Apple SD Gothic Neo, sans-serif;
+      background:var(--bg); color:var(--fg); }
+    header{ padding:16px 18px; border-bottom:1px solid var(--line); position:sticky; top:0; background:rgba(11,15,20,.9); backdrop-filter: blur(8px);}
+    h1{ font-size:16px; margin:0 0 4px 0; }
+    .sub{ font-size:12px; color:var(--muted); }
+    main{ padding:14px 12px 40px; max-width: 900px; margin:0 auto; }
+    .group{ margin:14px 0; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+    .group h2{ font-size:14px; margin:0; padding:12px 12px; border-bottom:1px solid var(--line); }
+    .item{ display:flex; gap:10px; padding:10px 12px; border-top:1px solid rgba(34,48,67,.55); align-items:flex-start; }
+    .item:first-child{ border-top:none; }
+    .title{ font-size:14px; line-height:1.35; }
+    .meta{ font-size:12px; color:var(--muted); margin-top:3px; }
+    a{ color: #79c0ff; text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+    input[type=checkbox]{ width:18px; height:18px; margin-top:2px; accent-color: var(--accent); }
+    .pill{ display:inline-block; padding:2px 8px; border:1px solid var(--line); border-radius: 999px; font-size:11px; color:var(--muted); margin-right:6px; }
+    .due{ color:#ffb86c; }
+    .nodue{ color:#9da7b3; }
+    .error{ color:#ff7b72; white-space:pre-wrap; font-size:12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>숙제 체크리스트</h1>
+    <div class="sub" id="lastUpdated">로딩중…</div>
+  </header>
+  <main>
+    <div id="app"></div>
+    <div class="sub" style="margin-top:12px;">체크 상태는 이 기기(브라우저)에만 저장돼요.</div>
+  </main>
+<script>
+const STORAGE_KEY = 'zc_done_v1';
+
+function loadDone(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+}
+function saveDone(done){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(done));
+}
+function fmtKst(iso){
+  if (!iso) return null;
+  const d = new Date(iso);
+  // show in Asia/Seoul
+  return new Intl.DateTimeFormat('ko-KR', { timeZone:'Asia/Seoul', month:'numeric', day:'numeric', weekday:'short', hour:'2-digit', minute:'2-digit' }).format(d);
+}
+
+async function main(){
+  const app = document.getElementById('app');
+  const lastUpdated = document.getElementById('lastUpdated');
+  const done = loadDone();
+
+  let data;
+  try {
+    const res = await fetch('./data.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch data.json: ' + res.status);
+    data = await res.json();
+  } catch (e) {
+    app.innerHTML = `<div class="error">${String(e.stack || e)}</div>`;
+    return;
+  }
+
+  if (data.generatedAt) {
+    const t = new Date(data.generatedAt);
+    lastUpdated.textContent = `마지막 갱신: ` + new Intl.DateTimeFormat('ko-KR', { timeZone:'Asia/Seoul', dateStyle:'medium', timeStyle:'short' }).format(t);
+  } else {
+    lastUpdated.textContent = '마지막 갱신: (알 수 없음)';
+  }
+
+  const groups = data.groups || [];
+  if (!groups.length) {
+    app.innerHTML = `<div class="sub">표시할 숙제가 없어요.</div>`;
+    return;
+  }
+
+  app.innerHTML = '';
+
+  for (const g of groups) {
+    const box = document.createElement('section');
+    box.className = 'group';
+
+    const h = document.createElement('h2');
+    h.textContent = g.name;
+    box.appendChild(h);
+
+    for (const it of (g.items || [])) {
+      const row = document.createElement('div');
+      row.className = 'item';
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = !!done[it.id];
+      cb.addEventListener('change', () => {
+        done[it.id] = cb.checked ? 1 : 0;
+        saveDone(done);
+      });
+
+      const content = document.createElement('div');
+      const title = document.createElement('div');
+      title.className = 'title';
+      const a = document.createElement('a');
+      a.href = it.link || '#';
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.textContent = it.title || '(제목 없음)';
+      title.appendChild(a);
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+
+      const dueText = fmtKst(it.dueAt);
+      meta.innerHTML = `${it.topic ? `<span class="pill">${it.topic}</span>` : ''}`
+        + `${dueText ? `<span class="pill due">마감 ${dueText}</span>` : `<span class="pill nodue">마감 없음</span>`}`;
+
+      content.appendChild(title);
+      content.appendChild(meta);
+
+      row.appendChild(cb);
+      row.appendChild(content);
+      box.appendChild(row);
+    }
+
+    app.appendChild(box);
+  }
+}
+
+main();
+</script>
+</body>
+</html>
