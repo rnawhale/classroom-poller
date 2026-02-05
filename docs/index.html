@@ -29,18 +29,19 @@
 </head>
 <body>
   <header>
-    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
-      <div>
-        <h1>숙제 체크리스트</h1>
-        <div class="sub" id="classroomTop"></div>
-        <div class="sub" id="lastUpdated">로딩중…</div>
-      </div>
-      <div class="sub" id="dayNav" style="max-width: 210px; text-align:right; display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;"></div>
-    </div>
+    <h1>숙제 체크리스트</h1>
+    <div class="sub" id="classroomTop"></div>
+    <div class="sub" id="lastUpdated">로딩중…</div>
   </header>
-  <main>
-    <div id="app"></div>
-    <div class="sub" style="margin-top:12px;">체크 상태는 이 기기(브라우저)에만 저장돼요.</div>
+  <main style="display:flex; gap:12px; align-items:flex-start;">
+    <div style="flex:1; min-width:0;">
+      <div id="app"></div>
+      <div class="sub" style="margin-top:12px;">체크 상태는 이 기기(브라우저)에만 저장돼요.</div>
+    </div>
+    <aside style="width: 170px; flex: 0 0 170px; position:sticky; top:62px;">
+      <div class="sub" style="text-align:right; margin-bottom:6px;">날짜</div>
+      <div class="sub" id="dayNav" style="text-align:right; display:flex; flex-direction:column; gap:6px; align-items:flex-end;"></div>
+    </aside>
   </main>
 <script>
 const STORAGE_KEY = 'zc_done_v1';
@@ -92,7 +93,7 @@ async function main(){
   // Default: show today (only today's created/updated items)
   const activeDay = (dayParam && available.has(dayParam)) ? dayParam : (available.has(todayKey) ? todayKey : manifest.latestDay);
 
-  // Render day links (last 14 days only) using date labels (YYYY.MM.DD)
+  // Render day links (last 14 days only) using date labels (YYYY.MM.DD), newest first.
   function addDaysKst(baseKey, delta) {
     const [y,m,d] = baseKey.split('-').map(Number);
     const utc = Date.UTC(y, m-1, d, 0, 0, 0);
@@ -111,7 +112,8 @@ async function main(){
 
   dayNav.innerHTML = links.map(d => {
     const href = `?day=${encodeURIComponent(d.day)}`;
-    return `<a href="${href}" style="${d.isActive?'color:#7ee787; text-decoration:underline;':''}">${escapeHtml(d.label)}</a>`;
+    const style = d.isActive ? 'color:#7ee787; text-decoration:underline;' : '';
+    return `<a href="${href}" style="${style}">${escapeHtml(d.label)}</a>`;
   }).join('');
 
   let data;
@@ -182,25 +184,14 @@ async function main(){
       a.textContent = it.title || '(제목 없음)';
       title.appendChild(a);
 
-      // Show full combined text (when available) without breaking the compact layout.
+      // Show full combined text (when available) in the original format (no collapse)
       if (it.details) {
-        const dwrap = document.createElement('details');
-        dwrap.style.marginTop = '6px';
-
-        const sum = document.createElement('summary');
-        sum.className = 'meta';
-        sum.style.cursor = 'pointer';
-        sum.textContent = '내용 보기';
-
         const body = document.createElement('div');
         body.className = 'meta';
         body.style.whiteSpace = 'pre-wrap';
         body.style.marginTop = '6px';
         body.textContent = it.details;
-
-        dwrap.appendChild(sum);
-        dwrap.appendChild(body);
-        content.appendChild(dwrap);
+        content.appendChild(body);
       }
 
       const meta = document.createElement('div');
