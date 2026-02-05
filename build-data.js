@@ -113,9 +113,10 @@ async function main() {
       const byDay = new Map(); // dayKey -> [{when, txt}]
 
       for (const a of (annRes.data.announcements || [])) {
-        const raw = (a.text || '').trim();
-        const txt = raw.replace(/\s+/g, ' ').trim();
-        if (!txt) continue;
+        // Keep original line breaks (Google Classroom text often contains meaningful newlines)
+        const raw = (a.text || '').replace(/\r\n/g, '\n').trim();
+        const txt = raw.replace(/\n{3,}/g, '\n\n');
+        if (!txt.trim()) continue;
 
         // Heuristic filter: keep only homework-like announcements.
         // (We explicitly want to ignore photo/share-only posts.)
