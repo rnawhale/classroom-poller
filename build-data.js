@@ -109,23 +109,54 @@ async function main() {
         orderBy: 'updateTime desc',
       });
 
+      // Merge multiple homework announcements in the same day into a single checklist item.
+      const byDay = new Map(); // dayKey -> [{when, txt}]
+
       for (const a of (annRes.data.announcements || [])) {
-        const txt = (a.text || '').replace(/\s+/g, ' ').trim();
+        const raw = (a.text || '').trim();
+        const txt = raw.replace(/\s+/g, ' ').trim();
         if (!txt) continue;
+
+        // Heuristic filter: keep only homework-like announcements.
+        // (We explicitly want to ignore photo/share-only posts.)
+        const hay = txt.toLowerCase();
+        const looksLikeHomework =
+          hay.includes('homework') ||
+          hay.includes('assignment') ||
+          hay.includes('due') ||
+          hay.includes('quiz') ||
+          hay.includes('test') ||
+          hay.includes('worksheet') ||
+          hay.includes('read') ||
+          hay.includes('watch') ||
+          hay.includes('practice') ||
+          hay.includes('spelling') ||
+          hay.includes('math') ||
+          hay.includes('science');
+
+        if (!looksLikeHomework) continue;
 
         const whenIso = a.updateTime || a.creationTime;
         const when = whenIso ? new Date(whenIso) : new Date();
         const dayKey = kstDayKey(when);
 
-        // For now: include all announcements in archives.
-        // We'll tighten “homework-only” filtering after we review examples.
+        if (!byDay.has(dayKey)) byDay.set(dayKey, []);
+        byDay.get(dayKey).push({ when: when.toISOString(), txt });
+      }
+
+      for (const [dayKey, parts] of byDay.entries()) {
+        parts.sort((a, b) => a.when.localeCompare(b.when));
+        const combined = parts.map(p => p.txt).join('\n\n');
+        const createdAt = parts[parts.length - 1].when;
+
         pushItem(dayKey, c.name, {
-          id: `ann:${c.id}:${a.id}`,
-          title: txt.length > 120 ? txt.slice(0, 117) + '…' : txt,
+          id: `ann-day:${c.id}:${dayKey}`,
+          title: combined.length > 120 ? combined.slice(0, 117) + '…' : combined,
+          details: combined,
           link: c.alternateLink || null,
           dueAt: null,
           topic: 'ANNOUNCEMENT',
-          createdAt: when.toISOString(),
+          createdAt,
         });
       }
     } catch {
@@ -149,7 +180,7 @@ async function main() {
         if (at !== bt) return bt - at;
         return (a.title || '').localeCompare(b.title || '');
       });
-      return { name, items };
+      return { name, link: courses.find(cc => cc.name === name)?.alternateLink || null, items };
     });
 
     const out = {
