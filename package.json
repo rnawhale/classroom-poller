@@ -5,7 +5,8 @@
   "description": "Google Classroom poller (courses + coursework) for checklist generation",
   "main": "index.js",
   "scripts": {
-    "poll": "node index.js"
+    "poll": "node index.js",
+    "build:data": "node build-data.js"
   },
   "keywords": [],
   "author": "",

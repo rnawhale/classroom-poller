@@ -12,6 +12,8 @@ const SCOPES = [
   'https://www.googleapis.com/auth/classroom.courses.readonly',
   'https://www.googleapis.com/auth/classroom.coursework.me.readonly',
   'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly',
+  // Some teachers post “homework” as announcements/materials. This lets us read those too.
+  'https://www.googleapis.com/auth/classroom.announcements.readonly',
 ];
 
 function mustGetEnv(name) {
@@ -73,7 +75,7 @@ async function startLocalAuth({ clientId, clientSecret }) {
     });
   });
 
-  console.log('Google OAuth consent URL (open in a browser):');
+  console.log('Google OAuth consent URL (open in a browser on THIS machine):');
   console.log(authUrl);
   try {
     await open(authUrl);
@@ -86,6 +88,60 @@ async function startLocalAuth({ clientId, clientSecret }) {
   const { tokens } = await oAuth2Client.getToken(code);
   oAuth2Client.setCredentials(tokens);
   return { oAuth2Client, tokens };
+}
+
+async function startDeviceAuth({ clientId, clientSecret }) {
+  // OAuth 2.0 Device Authorization Grant
+  // User can approve from ANY device (phone), no need for localhost redirect.
+  const oAuth2Client = new google.auth.OAuth2(clientId, clientSecret);
+
+  const deviceRes = await fetch('https://oauth2.googleapis.com/device/code', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: clientId,
+      scope: SCOPES.join(' '),
+    }),
+  });
+
+  const device = await deviceRes.json();
+  if (!deviceRes.ok) {
+    throw new Error('Device code start failed: ' + JSON.stringify(device));
+  }
+
+  console.log('\n=== ACTION REQUIRED (Device Flow) ===');
+  console.log('1) Open:', device.verification_url);
+  console.log('2) Enter code:', device.user_code);
+  console.log('====================================\n');
+
+  const intervalMs = (device.interval || 5) * 1000;
+  const expiresAt = Date.now() + (device.expires_in || 600) * 1000;
+
+  while (Date.now() < expiresAt) {
+    await new Promise(r => setTimeout(r, intervalMs));
+
+    const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: clientId,
+        client_secret: clientSecret,
+        device_code: device.device_code,
+        grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
+      }),
+    });
+
+    const tok = await tokenRes.json();
+    if (tokenRes.ok) {
+      oAuth2Client.setCredentials(tok);
+      return { oAuth2Client, tokens: tok };
+    }
+
+    if (tok.error === 'authorization_pending' || tok.error === 'slow_down') continue;
+    throw new Error('Device token failed: ' + JSON.stringify(tok));
+  }
+
+  throw new Error('Device flow timed out');
 }
 
 async function main() {
@@ -106,7 +162,10 @@ async function main() {
     oAuth2Client.setCredentials(tokens);
     auth = oAuth2Client;
   } else {
-    const r = await startLocalAuth({ clientId, clientSecret });
+    const useDevice = (process.env.GOOGLE_AUTH_METHOD || '').toLowerCase() === 'device';
+    const r = useDevice
+      ? await startDeviceAuth({ clientId, clientSecret })
+      : await startLocalAuth({ clientId, clientSecret });
     auth = r.oAuth2Client;
     await fs.writeFile(tokenPath, JSON.stringify(r.tokens, null, 2));
     console.log('Saved tokens to', tokenPath);
@@ -124,16 +183,32 @@ async function main() {
     const cwRes = await classroom.courses.courseWork.list({
       courseId: c.id,
       pageSize: 50,
+      courseWorkStates: ['PUBLISHED'],
       orderBy: 'dueDate desc',
     });
     const works = cwRes.data.courseWork || [];
+    console.log(`CourseWork: ${works.length}`);
 
     for (const w of works) {
       const due = googleDueToDate(w.dueDate, w.dueTime);
       const dueStr = due ? format(due, "yyyy-MM-dd HH:mm 'KST'") : 'NO_DUE';
       const topic = w.topicId ? `(topicId:${w.topicId})` : '';
       const link = w.alternateLink || '';
-      console.log(`- ${c.name} | ${dueStr} | ${w.title} ${topic} ${link}`);
+      console.log(`- [CW] ${c.name} | ${dueStr} | ${w.title} ${topic} ${link}`);
+    }
+
+    const annRes = await classroom.courses.announcements.list({
+      courseId: c.id,
+      pageSize: 20,
+      orderBy: 'updateTime desc',
+    });
+    const anns = annRes.data.announcements || [];
+    console.log(`Announcements: ${anns.length}`);
+    for (const a of anns) {
+      const when = a.updateTime || a.creationTime;
+      const whenStr = when ? format(new Date(when), "yyyy-MM-dd HH:mm 'KST'") : '';
+      const txt = (a.text || '').replace(/\s+/g, ' ').slice(0, 120);
+      console.log(`- [ANN] ${c.name} | ${whenStr} | ${txt}`);
     }
   }
 }
